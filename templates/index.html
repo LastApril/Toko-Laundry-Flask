@@ -1,0 +1,89 @@
+{% include 'header.html' %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Transaksi</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+<script src="{{ url_for('static', filename='plugins/jquery/jquery.min.js') }}"></script>
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+              <!-- general form elements -->
+              <div class="card card-primary">
+                <!-- form start -->
+                <form action="/tambahtransaksi" method="POST">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label for="Nama">Nama</label>
+                      <input type="text" class="form-control" id="Nama" name="nama" placeholder="Atas Nama">
+                    </div>
+                    <div class="form-group">
+                      <label>Paket</label>
+                        <select class="form-control" name="paket" id="paket">
+                          <option disabled selected value>--Pilih--</option>
+                          {% for rs in data %}
+                          <option value="{'id':'{{rs.0}}','value':'{{rs.2}}'}">{{rs.1}}</option>
+                          {% endfor %}
+                        </select>
+                        <input type="hidden" name="id" id="id" readonly>
+                        <input type="hidden" name="harga" id="harga" readonly>
+                        <script type="text/javascript">
+                            $("#paket").on('change', function() {
+                                var harga = $("#paket").val();
+                                harga = harga.replace(/'/g, '"');
+                                obj = JSON.parse(harga);
+                                $("#id").val(obj.id);
+                                $("#harga").val(obj.value);
+                            });
+                        </script>
+                    </div>
+                    <script type="text/javascript">
+                            function tes() {
+                                var harga = $("#harga").val();
+                                var jml = $("#Berat").val();
+                                var total = jml * harga;
+                                console.log(total);
+                                $("#TotalHarga").val(total);
+                            }
+                        </script>
+                    <div class="form-group">
+                      <label for="Berat">Berat</label>
+                      <input type="number" class="form-control" id="Berat" name="berat" placeholder="KG" onchange="tes()">
+                    </div>
+                    <div class="form-group">
+                      <label for="TotalHarga">Total Harga</label>
+                      <input type="text" class="form-control" id="TotalHarga" name="total" placeholder="Total harga" readonly>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+
+                  <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </form>
+              </div>
+              <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% include 'footer.html' %}
