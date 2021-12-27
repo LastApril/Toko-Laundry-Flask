@@ -17,6 +17,31 @@ def index():
     con.close()
     return render_template('index.html',data=harga)
 
+@app.route('/formubahtransaksi/<id>')
+def formubahtransaksi(id):
+    con = mysql.connection.cursor()
+    con.execute("select * from harga")
+    harga = con.fetchall()
+    con.execute("select * from transaksi where id=%s",id)
+    transaksi = con.fetchall()
+    con.close()
+    return render_template('formubahtransaksi.html',data=transaksi,data2=harga)
+
+@app.post('/ubahtransaksi')
+def ubahtransaksi():
+    id = request.form['id']
+    nama = request.form['nama']
+    id_paket = request.form['id_paket']
+    berat = request.form['berat']
+    harga = request.form['total']
+    con = mysql.connection.cursor()
+    con.execute(
+        "update transaksi set nama=%s, id_paket=%s, berat=%s, harga=%s where id=%s",(nama,id_paket, berat, harga,id)
+    )
+    mysql.connection.commit()
+    con.close()
+    return redirect(url_for('transaksi'))
+
 @app.post('/tambahtransaksi')
 def tambahtransaksi():
     nama = request.form['nama']
